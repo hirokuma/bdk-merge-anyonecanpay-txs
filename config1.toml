@@ -1,0 +1,8 @@
+wallet_fname = "mywallet1.bdk"
+privkey_fname = "myprivkey1.txt"
+network = "regtest"
+backend = "electrum"
+
+[electrum]
+enabled = true
+server = "tcp://127.0.0.1:50001"
