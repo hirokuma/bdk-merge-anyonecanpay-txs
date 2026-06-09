@@ -29,13 +29,19 @@ fn main() -> Result<()> {
     let addr3 = wallet1.new_address();
     let addr4 = wallet2.new_address();
     let tx1 = wallet1.create_tx_single_anypay(&addr4.to_string(), 100_000_000 - 160, 1.0)?;
-    let tx2 = wallet2.create_tx_single_anypay(&addr3.to_string(), 100_000_000 - 160, 1.0)?;
+    let tx2 = wallet2.create_tx_single_anypay(&addr3.to_string(), 100_000_000 - 300, 1.0)?; // fee少しup
 
     println!("tx1:");
     println!("{:#?}", tx1);
     println!("tx2:");
     println!("{:#?}", tx2);
 
+    println!("\nSend tx1:");
+    let txid = wallet1.send_tx(&tx1)?;
+    println!("txid1={}", txid);
+    std::thread::sleep(std::time::Duration::from_secs(5));
+
+    // tx1 + tx2
     let tx = Transaction {
         version: tx1.version,
         lock_time: tx1.lock_time,
@@ -46,6 +52,7 @@ fn main() -> Result<()> {
     println!("tx:");
     println!("{:#?}", tx);
 
+    println!("\nSend tx1+tx2:");
     let txid = wallet1.send_tx(&tx)?;
     println!("txid={}", txid);
 
