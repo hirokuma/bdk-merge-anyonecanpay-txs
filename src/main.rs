@@ -28,8 +28,8 @@ fn main() -> Result<()> {
 
     let addr3 = wallet1.new_address();
     let addr4 = wallet2.new_address();
-    let tx1 = wallet1.create_tx_single_anypay(&addr4.to_string(), 100_000_000 - 160, 1.0)?;
-    let tx2 = wallet2.create_tx_single_anypay(&addr3.to_string(), 100_000_000 - 300, 1.0)?; // fee少しup
+    let tx1 = wallet1.create_tx_single_anypay(&addr4, 100_000_000 - 160, 1.0)?;
+    let tx2 = wallet2.create_tx_single_anypay(&addr3, 100_000_000 - 300, 1.0)?; // fee少しup
 
     println!("tx1:");
     println!("{:#?}", tx1);
