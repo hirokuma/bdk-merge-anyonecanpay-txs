@@ -1,5 +1,5 @@
 use anyhow::Result;
-use btc_wallet::{Balance, BtcWallet, Transaction};
+use btc_wallet::{self, Balance, BtcWallet, Transaction};
 use std::io::{self, Write};
 use tracing::*;
 
@@ -14,9 +14,15 @@ fn main() -> Result<()> {
     let config2 =
         btc_wallet::load_config("./config2.toml").inspect_err(|e| error!("load_config2: {e}"))?;
 
-    let mut wallet1 = BtcWallet::create_or_load(config1).inspect_err(|e| error!("create1: {e}"))?;
+    let mut wallet1 = match config1.privkey_fname.exists() {
+        true => BtcWallet::load(config1, btc_wallet::load_private_key),
+        false => BtcWallet::create(config1, btc_wallet::save_private_key),
+    }.inspect_err(|e| error!("wallet1: {e}"))?;
     info!("wallet1 created: {}", wallet1.config.network);
-    let mut wallet2 = BtcWallet::create_or_load(config2).inspect_err(|e| error!("create2: {e}"))?;
+    let mut wallet2 = match config2.privkey_fname.exists() {
+        true => BtcWallet::load(config2, btc_wallet::load_private_key),
+        false => BtcWallet::create(config2, btc_wallet::save_private_key),
+    }.inspect_err(|e| error!("wallet2: {e}"))?;
     info!("wallet2 created: {}", wallet2.config.network);
 
     let addr1 = wallet1.new_address();
